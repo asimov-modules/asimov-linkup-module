@@ -1,0 +1,32 @@
+# See: https://asimov-specs.github.io/module-manifest/
+---
+name: linkup
+label: LinkUp
+summary: A LinkedIn API powered by LinkUp
+links:
+  - https://github.com/asimov-modules/asimov-linkup-module
+  - https://crates.io/crates/asimov-linkup-module
+  - https://pypi.org/project/asimov-linkup-module
+  - https://rubygems.org/gems/asimov-linkup-module
+  - https://npmjs.com/package/asimov-linkup-module
+
+config:
+  variables:
+    - name: linkup-api-key
+      environment: "LINKUP_API_KEY"
+    - name: linkedin-email
+      environment: "LINKEDIN_EMAIL"
+    - name: linkedin-password
+      environment: "LINKEDIN_PASSWORD"
+
+provides:
+  programs:
+    - asimov-linkup-fetcher
+
+handles:
+  url_patterns:
+    - https://linkedin.com/in/:account
+    - https://linkedin.com/company/:company
+    - https://linkedin.com/messaging
+    - https://linkedin.com/messaging/thread/:conversation
+    - https://www.linkedin.com/mynetwork/invite-connect/connections/
