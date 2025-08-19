@@ -27,7 +27,7 @@ struct Options {
 
 #[cfg(feature = "std")]
 #[tokio::main]
-async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
+async fn main() -> SysexitsError {
     // Load environment variables from `.env`:
 
     use std::io::Write;
@@ -37,7 +37,7 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
 
     // Expand wildcards and @argfiles:
     let Ok(args) = clientele::args_os() else {
-        return Ok(EX_USAGE);
+        return EX_USAGE;
     };
     let options = Options::parse_from(&args);
 
@@ -46,18 +46,18 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
 
     if options.flags.version {
         println!("asimov-linkup-fetcher {}", env!("CARGO_PKG_VERSION"));
-        return Ok(EX_OK);
+        return EX_OK;
     }
 
     if options.urls.is_empty() {
-        return Ok(EX_OK);
+        return EX_OK;
     }
 
     let manifest = match asimov_module::ModuleManifest::read_manifest("linkup") {
         Ok(manifest) => manifest,
         Err(e) => {
             tracing::error!("failed to read module manifest: {e}");
-            return Ok(EX_CONFIG);
+            return EX_CONFIG;
         }
     };
 
@@ -66,7 +66,7 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
         Ok(api_key) => api_key.into(),
         Err(e) => {
             tracing::error!("failed to get LinkUp API key: {e}");
-            return Ok(EX_CONFIG); // not configured
+            return EX_CONFIG; // not configured
         }
     };
 
@@ -83,7 +83,7 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
                 Ok(email) => email.into(),
                 Err(e) => {
                     tracing::error!("failed to get LinkedIn email: {e}");
-                    return Ok(EX_CONFIG); // not configured
+                    return EX_CONFIG; // not configured
                 }
             };
 
@@ -91,7 +91,7 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
                 Ok(pass) => pass.into(),
                 Err(e) => {
                     tracing::error!("failed to get LinkedIn password: {e}");
-                    return Ok(EX_CONFIG); // not configured
+                    return EX_CONFIG; // not configured
                 }
             };
 
@@ -114,22 +114,25 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
                             Some(Ok(_)) => continue,
                             Some(Err(e)) => {
                                 tracing::error!("error while reading input: {e}");
-                                return Err(EX_UNAVAILABLE);
+                                return EX_UNAVAILABLE;
                             }
                             None => {
                                 tracing::error!("verification code is required");
-                                return Err(EX_UNAVAILABLE);
+                                return EX_UNAVAILABLE;
                             }
                         }
                     };
 
                     let token_string =
-                        asimov_linkup_module::verify(&http_client, &api_key, &email, &code)
+                        match asimov_linkup_module::verify(&http_client, &api_key, &email, &code)
                             .await
-                            .map_err(|e| {
+                        {
+                            Ok(t) => t,
+                            Err(e) => {
                                 tracing::error!("code verification failed: {e}");
-                                EX_UNAVAILABLE
-                            })?;
+                                return EX_UNAVAILABLE;
+                            }
+                        };
 
                     token.set_password(&token_string).unwrap();
 
@@ -137,13 +140,13 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
                 }
                 Err(e) => {
                     tracing::error!("login flow failed: {e}");
-                    return Err(EX_UNAVAILABLE);
+                    return EX_UNAVAILABLE;
                 }
             }
         }
         Err(e) => {
             tracing::error!("failed to read login token from keychain: {e}");
-            return Ok(EX_UNAVAILABLE);
+            return EX_UNAVAILABLE;
         }
     };
 
@@ -154,10 +157,13 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
 
     let mut stdout = std::io::stdout().lock();
     for url in options.urls {
-        let response = client.fetch(&url).await.map_err(|e| {
-            tracing::error!("request failed: {e}");
-            EX_UNAVAILABLE
-        })?;
+        let response = match client.fetch(&url).await {
+            Ok(r) => r,
+            Err(e) => {
+                tracing::error!("request failed: {e}");
+                return EX_UNAVAILABLE;
+            }
+        };
 
         match response {
             serde_json::Value::Array(values) => {
@@ -170,7 +176,7 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
         }
     }
 
-    Ok(EX_OK)
+    EX_OK
 }
 
 #[cfg(not(feature = "std"))]
