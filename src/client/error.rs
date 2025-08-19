@@ -6,7 +6,7 @@ use std::string::String;
 pub enum RequestError {
     #[error("HTTP request failed: {0}")]
     Http(#[from] reqwest::Error),
-    #[error("failed to parso response: {0}")]
+    #[error("failed to parse response: {0}")]
     InvalidJson(#[from] serde_json::Error),
     #[error("API response is an error: {0}")]
     Api(String),
