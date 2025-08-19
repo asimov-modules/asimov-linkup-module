@@ -61,7 +61,7 @@ async fn main() -> Result<asimov_module::SysexitsError, SysexitsError> {
         }
     };
 
-    // Obtain the Apify API token from the environment:
+    // Obtain the LinkUp API key from the environment:
     let api_key: SecretString = match manifest.variable("linkup-api-key", None) {
         Ok(api_key) => api_key.into(),
         Err(e) => {
