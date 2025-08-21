@@ -2,3 +2,9 @@
 
 #![no_std]
 #![forbid(unsafe_code)]
+
+#[cfg(feature = "std")]
+extern crate std;
+
+mod client;
+pub use client::*;
