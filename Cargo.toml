@@ -2,7 +2,7 @@
 
 [package]
 name = "asimov-linkup-module"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["ASIMOV Protocol <support@asimov.so>"]
 edition = "2024"
 #rust-version = "1.85"
@@ -21,50 +21,50 @@ default = ["all", "cli", "std"]
 all = ["tracing"]
 cli = ["asimov-module/cli", "std"]
 std = [
-	"asimov-module/std",
-	"bon/std",
-	"serde_json/std",
-	"serde/std",
-	"thiserror/std",
-	"tracing/std",
-	"url/std",
+  "asimov-module/std",
+  "bon/std",
+  "serde_json/std",
+  "serde/std",
+  "thiserror/std",
+  "tracing/std",
+  "url/std",
 ]
 tracing = ["asimov-module/tracing", "dep:tracing", "dep:tracing-subscriber"]
 unstable = []
 
 [dependencies]
 asimov-module = { version = "25.0.0-dev.21", default-features = false, features = [
-	"serde",
+  "serde",
 ] }
 bon = { version = "3.7", default-features = false, features = ["alloc"] }
 clientele = { version = "0.3", default-features = false, features = [
-	"all",
-	"clap",
-	"dotenv",
+  "all",
+  "clap",
+  "dotenv",
 ] }
 keyring = { version = "3.6", features = [
-	"apple-native",
-	"linux-native",
-	"windows-native",
+  "apple-native",
+  "linux-native",
+  "windows-native",
 ] }
 reqwest = { version = "0.12", default-features = false, features = [
-	"json",
-	"rustls-tls",
-	"rustls-tls-native-roots",
+  "json",
+  "rustls-tls",
+  "rustls-tls-native-roots",
 ] }
 serde = { version = "1.0", default-features = false, features = [
-	"alloc",
-	"derive",
+  "alloc",
+  "derive",
 ] }
 serde_json = { version = "1.0", default-features = false }
 thiserror = { version = "2.0", default-features = false }
 tokio = { version = "1.47", features = ["rt-multi-thread", "macros"] }
 tracing = { version = "0.1", default-features = false, optional = true, features = [
-	"attributes",
+  "attributes",
 ] }
 tracing-subscriber = { version = "0.3", default-features = false, features = [
-	"alloc",
-	"tracing-log",
+  "alloc",
+  "tracing-log",
 ], optional = true }
 url = { version = "2.5", default-features = false }
 
