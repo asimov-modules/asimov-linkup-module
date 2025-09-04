@@ -37,11 +37,11 @@ pub async fn login(
         .header("x-api-key", api_key.expose_secret())
         .json(&request)
         .send()
-        .await
-        .map_err(RequestError::from)?;
+        .await?
+        .error_for_status()?;
 
     let status = response.status();
-    let body = response.text().await.map_err(RequestError::from)?;
+    let body = response.text().await?;
 
     match serde_json::from_str::<api::LoginResponse>(&body) {
         Ok(api::LoginResponse::Success { success }) => match success {
@@ -82,11 +82,11 @@ pub async fn verify(
         .header("x-api-key", api_key.expose_secret())
         .json(&request)
         .send()
-        .await
-        .map_err(RequestError::from)?;
+        .await?
+        .error_for_status()?;
 
     let status = response.status();
-    let body = response.text().await.map_err(RequestError::from)?;
+    let body = response.text().await?;
 
     match serde_json::from_str::<api::VerifyResponse>(&body) {
         Ok(api::VerifyResponse::Success { login_token, .. }) => Ok(login_token),
@@ -163,11 +163,11 @@ impl Client {
             .header("x-api-key", self.api_key.expose_secret())
             .json(&request)
             .send()
-            .await
-            .map_err(RequestError::from)?;
+            .await?
+            .error_for_status()?;
 
         let status = response.status();
-        let body = response.text().await.map_err(RequestError::from)?;
+        let body = response.text().await?;
 
         match serde_json::from_str::<api::FetchResponse>(&body) {
             Ok(api::FetchResponse::Success { data, .. }) => Ok(data),
@@ -220,11 +220,11 @@ impl Client {
                 .header("x-api-key", self.api_key.expose_secret())
                 .json(&request)
                 .send()
-                .await
-                .map_err(RequestError::from)?;
+                .await?
+                .error_for_status()?;
 
             let status = response.status();
-            let body = response.text().await.map_err(RequestError::from)?;
+            let body = response.text().await?;
 
             tracing::debug!(body);
 
@@ -287,11 +287,11 @@ impl Client {
                 .header("x-api-key", self.api_key.expose_secret())
                 .json(&request)
                 .send()
-                .await
-                .map_err(RequestError::from)?;
+                .await?
+                .error_for_status()?;
 
             let status = response.status();
-            let body = response.text().await.map_err(RequestError::from)?;
+            let body = response.text().await?;
 
             match serde_json::from_str::<api::FetchResponse>(&body) {
                 Ok(api::FetchResponse::Success { data }) => {
@@ -354,11 +354,11 @@ impl Client {
                 .header("x-api-key", self.api_key.expose_secret())
                 .json(&request)
                 .send()
-                .await
-                .map_err(RequestError::from)?;
+                .await?
+                .error_for_status()?;
 
             let status = response.status();
-            let body = response.text().await.map_err(RequestError::from)?;
+            let body = response.text().await?;
 
             match serde_json::from_str::<api::FetchResponse>(&body) {
                 Ok(api::FetchResponse::Success { data }) => {
@@ -408,11 +408,11 @@ impl Client {
             .header("x-api-key", self.api_key.expose_secret())
             .json(&request)
             .send()
-            .await
-            .map_err(RequestError::from)?;
+            .await?
+            .error_for_status()?;
 
         let status = response.status();
-        let body = response.text().await.map_err(RequestError::from)?;
+        let body = response.text().await?;
 
         match serde_json::from_str::<api::FetchResponse>(&body) {
             Ok(api::FetchResponse::Success { data, .. }) => Ok(data),
@@ -450,11 +450,11 @@ impl Client {
                 .header("x-api-key", self.api_key.expose_secret())
                 .json(&request)
                 .send()
-                .await
-                .map_err(RequestError::from)?;
+                .await?
+                .error_for_status()?;
 
             let status = response.status();
-            let body = response.text().await.map_err(RequestError::from)?;
+            let body = response.text().await?;
 
             match serde_json::from_str::<api::FetchResponse>(&body) {
                 Ok(api::FetchResponse::Success { data }) => {

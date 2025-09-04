@@ -23,10 +23,22 @@ pub enum LoginError {
     Request(#[from] RequestError),
 }
 
+impl From<reqwest::Error> for LoginError {
+    fn from(value: reqwest::Error) -> Self {
+        Self::Request(value.into())
+    }
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum VerifyError {
     #[error(transparent)]
     Request(#[from] RequestError),
+}
+
+impl From<reqwest::Error> for VerifyError {
+    fn from(value: reqwest::Error) -> Self {
+        Self::Request(value.into())
+    }
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -37,4 +49,10 @@ pub enum FetchError {
     UnknownResource(String),
     #[error(transparent)]
     Request(#[from] RequestError),
+}
+
+impl From<reqwest::Error> for FetchError {
+    fn from(value: reqwest::Error) -> Self {
+        FetchError::Request(RequestError::Http(value))
+    }
 }
