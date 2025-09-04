@@ -42,21 +42,29 @@ async fn main() -> Result<SysexitsError, SysexitsError> {
     clientele::dotenv().ok();
 
     // Expand wildcards and @argfiles:
-    let Ok(args) = clientele::args_os() else {
-        return Err(EX_USAGE);
-    };
-    let options = Options::parse_from(&args);
+    let args = asimov_module::args_os()?;
 
+    // Parse command-line options:
+    let options = Options::parse_from(args);
+
+    // Handle the `--version` flag:
+    if options.flags.version {
+        println!("{} {}", env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
+        return Ok(EX_OK);
+    }
+
+    // Handle the `--license` flag:
+    if options.flags.license {
+        print!("{}", include_str!("../../UNLICENSE"));
+        return Ok(EX_OK);
+    }
+
+    // Configure logging & tracing:
     #[cfg(feature = "tracing")]
     asimov_module::init_tracing_subscriber(&options.flags).expect("failed to initialize logging");
 
-    if options.flags.version {
-        println!("asimov-linkup-fetcher {}", env!("CARGO_PKG_VERSION"));
-        return Err(EX_OK);
-    }
-
     if options.urls.is_empty() {
-        return Err(EX_OK);
+        return Ok(EX_OK);
     }
 
     let manifest = match asimov_module::ModuleManifest::read_manifest("linkup") {
