@@ -144,8 +144,11 @@ impl Client {
 
     #[tracing::instrument(skip_all)]
     async fn fetch_company(&self, url: &url::Url) -> Result<serde_json::Value, FetchError> {
+        let url = url
+            .as_str()
+            .replace("https://linkedin.com", "https://www.linkedin.com");
         let request = json!({
-            "company_url": url.as_str(),
+            "company_url": url,
             "country": "US",
             "login_token": self.login_token.expose_secret(),
         });
