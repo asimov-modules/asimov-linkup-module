@@ -182,13 +182,7 @@ impl Client {
         url: &url::Url,
     ) -> Result<Vec<serde_json::Value>, FetchError> {
         // take id from /messaging/thread/:id
-        let id = url
-            .path_segments()
-            .unwrap()
-            .into_iter()
-            .skip(2)
-            .next()
-            .unwrap();
+        let id = url.path_segments().unwrap().nth(2).unwrap();
 
         let conv_id = self
             .find_conversation(id)
