@@ -51,31 +51,31 @@ export LINKEDIN_PASSWORD="..."
 ### Fetching LinkedIn user info
 
 ```bash
-asimov-linkup-fetcher https://linked.com/in/$USER
+asimov-linkup-fetcher https://linkedin.com/in/$USER
 ```
 
 ### Fetching LinkedIn company info
 
 ```bash
-asimov-linkup-fetcher https://linked.com/company/$COMPANY
+asimov-linkup-fetcher https://linkedin.com/company/$COMPANY
 ```
 
 ### Listing LinkedIn messaging conversations
 
 ```bash
-asimov-linkup-fetcher https://linked.com/messaging
+asimov-linkup-fetcher https://linkedin.com/messaging
 ```
 
 ### Listing LinkedIn message thread messages
 
 ```bash
-asimov-linkup-fetcher https://linked.com/messaging/thread/$THREAD
+asimov-linkup-fetcher https://linkedin.com/messaging/thread/$THREAD
 ```
 
 ### Listing LinkedIn connections
 
 ```bash
-asimov-linkup-fetcher https://linked.com/mynetwork/invite-connect/connections
+asimov-linkup-fetcher https://linkedin.com/mynetwork/invite-connect/connections
 ```
 
 ## 👨‍💻 Development
