@@ -1,4 +1,5 @@
 # See: https://asimov-specs.github.io/module-manifest/
+---
 name: linkup
 label: LinkUp
 summary: A LinkedIn API powered by LinkUp
